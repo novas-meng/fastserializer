@@ -27,7 +27,6 @@ public class Input
     public Class readClass()
     {
         int length=buffer[position++];
-        position=position+3;
         byte[] temp=new byte[length];
         System.arraycopy(buffer,position,temp,0,temp.length);
         position=position+temp.length;
