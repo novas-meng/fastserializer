@@ -32,19 +32,24 @@ public class objectSerializer
             int index= BasicType.isBasicType(type);
             if(index!=-1)
             {
-                if(type==Integer.TYPE)
+                try
                 {
-                    try
+                    if(type==Integer.TYPE)
                     {
                         System.out.println(fields[i].getName());
 //                        System.out.println(fields[i].getInt(object));
                         fields[i].setAccessible(true);
                         intSerializer.writeInt(output,fields[i].getName(),fields[i].getInt(object));
                     }
-                    catch (Exception e)
+                    else if(type==Double.TYPE)
                     {
-                        e.printStackTrace();
+                        fields[i].setAccessible(true);
+                        doubleSerializer.writeDouble(output, fields[i].getName(), fields[i].getDouble(object));
                     }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
         }

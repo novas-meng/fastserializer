@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class father
 {
     int a=8;
+    double c=56.98;
     //ArrayList<String> arrayList=new ArrayList<>();
  //   student student=new student();
     /*

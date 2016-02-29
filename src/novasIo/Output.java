@@ -51,6 +51,23 @@ public class Output
     {
         buffer[position++]=(byte)length;
     }
+    public void writeDouble(double m)
+    {
+        long n=Double.doubleToLongBits(m);
+        writeLong(n);
+    }
+    public void writeLong(long m)
+    {
+        buffer[position++]=(byte)(m&255);
+        buffer[position++]=(byte)((m>>8)&255);
+        buffer[position++]=(byte)((m>>16)&255);
+        buffer[position++]=(byte)((m>>24)&255);
+        buffer[position++]=(byte)((m>>32)&255);
+        buffer[position++]=(byte)((m>>40)&255);
+        buffer[position++]=(byte)((m>>48)&255);
+        buffer[position++]=(byte)((m>>56)&255);
+
+    }
     public void writeInt(int m)
     {
         buffer[position++]=(byte)(m&255);
