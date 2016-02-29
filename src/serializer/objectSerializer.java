@@ -17,6 +17,32 @@ public class objectSerializer
     {
         Class cls=input.readClass();
         System.out.println("read="+cls.getName());
+        if(cls!=null)
+        {
+            try
+            {
+                Object object=cls.newInstance();
+                Field[] fields=cls.getDeclaredFields();
+                System.out.println("基本类型" + input.isBasicType());
+                Type type=input.readBasicType();
+                String m=input.readFieldName();
+                Object value=input.readValue(type);
+                System.out.println("m=" + m);
+                Field field=cls.getDeclaredField(m);
+                field.setAccessible(true);
+                field.set(object,value);
+               // father father=(father)object;
+                if(type==Double.TYPE)
+                {
+                    System.out.println("zhengxing ");
+                }
+                return object;
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
         return null;
     }
     //根据反射进行写入object信息
