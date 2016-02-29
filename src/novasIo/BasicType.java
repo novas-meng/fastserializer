@@ -11,6 +11,7 @@ public class BasicType {
     public static void register()
     {
         arrayList.add(Integer.TYPE);
+        arrayList.add(Boolean.TYPE);
     }
     public static Type getBasicType(int index)
     {

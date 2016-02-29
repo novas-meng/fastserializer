@@ -40,12 +40,16 @@ public class Output
     }
     public void writeString(String m)
     {
-        writeInt(m.length());
+        writeByte(m.length());
         byte[] chars=m.getBytes();
         for(int i=0;i<chars.length;i++)
         {
             buffer[position++]=chars[i];
         }
+    }
+    public void writeByte(int length)
+    {
+        buffer[position++]=(byte)length;
     }
     public void writeInt(int m)
     {
