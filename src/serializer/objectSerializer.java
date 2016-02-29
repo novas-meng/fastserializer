@@ -23,18 +23,30 @@ public class objectSerializer
             {
                 Object object=cls.newInstance();
                 Field[] fields=cls.getDeclaredFields();
-                System.out.println("基本类型" + input.isBasicType());
-                Type type=input.readBasicType();
-                String m=input.readFieldName();
-                Object value=input.readValue(type);
-                System.out.println("m=" + m);
-                Field field=cls.getDeclaredField(m);
-                field.setAccessible(true);
-                field.set(object,value);
-               // father father=(father)object;
-                if(type==Double.TYPE)
+                int ptr=input.isBasicType();
+                while (ptr>0)
                 {
-                    System.out.println("zhengxing ");
+                    //ptr==1表示是基本类型
+                    if(ptr==1)
+                    {
+                       // System.out.println("基本类型" + input.isBasicType());
+                        Type type=input.readBasicType();
+                        String m=input.readFieldName();
+                        Object value=input.readValue(type);
+                        System.out.println("m=" + m);
+                        Field field=cls.getDeclaredField(m);
+                        field.setAccessible(true);
+                        field.set(object,value);
+                        if(type==Integer.TYPE)
+                        {
+                            System.out.println("integer");
+                        }
+                        if(type==Double.TYPE)
+                        {
+                            System.out.println("zhengxing");
+                        }
+                    }
+                    ptr=input.isBasicType();
                 }
                 return object;
             }

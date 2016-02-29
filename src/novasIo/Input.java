@@ -3,6 +3,7 @@ package novasIo;
 import serializer.objectSerializer;
 
 import java.io.FileInputStream;
+import java.lang.reflect.Type;
 
 /**
  * Created by novas on 16/2/28.
@@ -24,6 +25,24 @@ public class Input
             e.printStackTrace();
         }
     }
+    public String readFieldName()
+    {
+        int length=buffer[position++];
+        byte[] strsbytes=new byte[length];
+        for(int i=0;i<length;i++)
+        {
+            strsbytes[i]=buffer[position++];
+        }
+        return new String(strsbytes);
+    }
+    public int isBasicType()
+    {
+       return buffer[position++];
+    }
+    public Type readBasicType()
+    {
+        return BasicType.getBasicType(buffer[position++]);
+    }
     public Class readClass()
     {
         int length=buffer[position++];
@@ -42,6 +61,51 @@ public class Input
         }
         return cls;
     }
+    public Object readValue(Type type)
+    {
+       if(type==Integer.TYPE)
+       {
+          return readInt();
+       }
+       else if(type==Double.TYPE)
+       {
+           return readDouble();
+       }
+
+        return readInt();
+    }
+    public double readDouble()
+    {
+        long m=readLong();
+        return Double.longBitsToDouble(m);
+    }
+    public long readLong()
+    {
+        long s = 0;
+        long s0 = (buffer[position++] & 0xff);// 最低位
+        long s1 = (buffer[position++] & 0xff);
+        long s2 = (buffer[position++] & 0xff);
+        long s3 = (buffer[position++] & 0xff);
+        long s4 = (buffer[position++] & 0xff);// 最低位
+        long s5 = (buffer[position++] & 0xff);
+        long s6 = (buffer[position++] & 0xff);
+        long s7 = (buffer[position++] & 0xff);
+        // s0不变
+        s1 <<= 8;
+        s2 <<= 16;
+        s3 <<= 24;
+        s4 <<= 32;
+        s5 <<= 40;
+        s6 <<= 48;
+        s7 <<= 56;
+        s = s0 | s1 | s2 | s3 | s4 | s5 | s6 | s7;
+        return s;
+
+    }
+    public int readInt()
+    {
+        return (buffer[position++]&255)+((buffer[position++]&255)<<8)+((buffer[position++]&255)<<16)+((buffer[position++]&255)<<24);
+    }
     public Object readObject()
     {
         try
@@ -54,6 +118,6 @@ public class Input
         }
         System.out.println(buffer[0]);
         Object object= objectSerializer.readObject(this);
-        return null;
+        return object;
     }
 }

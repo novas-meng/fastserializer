@@ -12,6 +12,8 @@ public class BasicType {
     {
         arrayList.add(Integer.TYPE);
         arrayList.add(Boolean.TYPE);
+        arrayList.add(Double.TYPE);
+        arrayList.add(String.class);
     }
     public static Type getBasicType(int index)
     {

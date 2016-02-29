@@ -7,6 +7,7 @@ public class father
 {
     int a=8;
     double c=56.98;
+    String demo="my name is novas";
     //ArrayList<String> arrayList=new ArrayList<>();
  //   student student=new student();
     /*

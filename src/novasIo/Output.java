@@ -33,10 +33,10 @@ public class Output
     public void writeBasicFlag(Type type)
     {
         buffer[position++]=1;
-        if(type==Integer.TYPE)
-        {
-            buffer[position++]=1;
-        }
+       // if(type==Integer.TYPE)
+       // {
+            buffer[position++]=(byte)BasicType.isBasicType(type);
+       // }
     }
     public void writeString(String m)
     {
