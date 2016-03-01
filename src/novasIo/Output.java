@@ -10,13 +10,13 @@ import java.lang.reflect.Type;
  */
 public class Output
 {
-    int capcity=4096;
+    int capcity=409600;
     byte[] buffer=new byte[capcity];
     int position=0;
     FileOutputStream fileOutputStream;
     public Output(String path)
     {
-        this(path, 4096);
+        this(path, 409600);
     }
     public Output(String path,int capcity)
     {

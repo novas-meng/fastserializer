@@ -2,6 +2,7 @@
 import novasIo.Input;
 import novasIo.Output;
 import novasIo.novas;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
@@ -40,22 +41,26 @@ public class demo {
 
         long m=Double.doubleToLongBits(100.7895456 );
         System.out.println( Double.longBitsToDouble(m));
-
+        long time=System.currentTimeMillis();
         father father=new father();
         father.a=89;
         father.c=98888.7;
         father.array[0]=8;
         father.change();
+
         novas novas=new novas();
 
         Output output=new Output("file.bin");
         output.writeObject(father);
         Input input=new Input("file.bin");
         father=(father)input.readObject();
+        time=System.currentTimeMillis()-time;
         System.out.println(father.a);
         System.out.println(father.demo);
         System.out.println(father.c);
-        System.out.println(father.array[0]);
+        System.out.println(father.array[4896]);
+        System.out.println(father.st.c);
+        System.out.println("time="+time);
         //father f=new father();
        // Field[] fields=f.getClass().getDeclaredFields();
        // for(int i=0;i<fields.length;i++)

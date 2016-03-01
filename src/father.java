@@ -18,6 +18,7 @@ public class father
         {
           // map.put(i+"",array);
         }
+        st.c=9056;
     }
 
     int a=8;
@@ -26,7 +27,7 @@ public class father
    // child child;
     String demo="my name is novas";
     student st=new student();
-    int[] array=new int[100];
+    int[] array=new int[10000];
     /*
     public void change()
     {

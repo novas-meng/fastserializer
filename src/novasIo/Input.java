@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
  */
 public class Input
 {
-    int capcity=4096;
+    int capcity=409600;
     byte[] buffer=new byte[capcity];
     int position=0;
     FileInputStream fileInputStream;
@@ -29,11 +29,13 @@ public class Input
     public String readFieldName()
     {
         int length=buffer[position++];
+        System.out.println("length="+length);
         byte[] strsbytes=new byte[length];
         for(int i=0;i<length;i++)
         {
             strsbytes[i]=buffer[position++];
         }
+        System.out.println(strsbytes[0]);
         return new String(strsbytes);
     }
     public String readObjectName()
@@ -104,7 +106,7 @@ public class Input
         for(int i=0;i<length;i++)
         {
             array[i]=readInt();
-            System.out.println(array[i]);
+           // System.out.println(array[i]);
         }
         return array;
     }

@@ -3,6 +3,7 @@ package serializer;
 import novasIo.BasicType;
 import novasIo.Input;
 import novasIo.Output;
+import org.omg.PortableInterceptor.INACTIVE;
 import type.IntArray;
 
 import java.lang.reflect.Field;
@@ -13,35 +14,69 @@ import java.util.Map;
 /**
  * Created by novas on 16/2/28.
  */
+
+/**
+ * 生成序列化的规则；1.0
+ * 首先对于一个等待序列化的对象A，
+ * 1:首先写入A的类名
+ * 2:然后writeObjectType()，表示写入的是一个对象，然后写入A对象的名称。然后写入A中变量Field的个数
+ *  output.writeString(name);
+    output.writeInt(fields.length);
+ * 3:然后依次遍历每个field；分两种情况
+ * （1）：field是基本类型；
+ * 首先写入1，表示是基本类型，然后写入基本类型的索引
+ * output.writeBasicFlag(String.class);
+ * 然后写入变量名，然后写入变量值
+ * （2）:field不是基本类型
+ * 首先writeObjectType()，表示field是对象，然后写入变量名和field的长度，根据getType获取类名；
+ */
 public class objectSerializer
 {
-    //根据字节数组和反射生成字object信息
-    public static Object readObject(Input input)
+    public static Class readObjectClass(Input input)
     {
-       System.out.println("basic type" + input.isBasicType());
+        int ptr=input.isBasicType();
         Class cls=input.readClass();
-        String name=input.readObjectName();
-        System.out.println("read="+cls.getName());
-        if(cls!=null)
-        {
+        System.out.println("read class"+cls.getName());
+        return cls;
+    }
+    //dector表示是否是顶层的对象，当dector为true的时候，表示读取的是序列化对象的fields，这个时候
+    //cls为之前读取的class，当dector为false的时候，表示读取的是对象中变量包含的fields；这个时候不需要再
+    // input.isBasicType();因为在for循环的时候已经读取了，而且这个时候，需要的class是此变量的class
+    public static Object readObjectFields(Class cls,Input input,boolean dector,Object srcObject)
+    {
+        String name=null;
+        int length=0;
+        Field Parntfield=null;
             try
             {
-                Object object=cls.newInstance();
-                Field[] fields=cls.getDeclaredFields();
-                int ptr=input.isBasicType();
-                while (ptr>0)
+                if(dector==true)
                 {
-                    //ptr==1表示是基本类型
+                    input.isBasicType();
+                     name=input.readObjectName();
+                     length=input.readInt();
+                }
+                else
+                {
+                    name=input.readObjectName();
+                    length=input.readInt();
+                    Parntfield=cls.getDeclaredField(name);
+                    cls=Parntfield.getType();
+                }
+
+                Object valueobject=cls.newInstance();
+                for(int i=0;i<length;i++)
+                {
+                    int ptr=input.isBasicType();
                     if(ptr==1)
                     {
-                       // System.out.println("基本类型" + input.isBasicType());
+                        // System.out.println("基本类型" + input.isBasicType());
                         Type type=input.readBasicType();
                         String m=input.readFieldName();
                         Object value=input.readValue(type);
                         System.out.println("basic name=" + m);
                         Field field=cls.getDeclaredField(m);
                         field.setAccessible(true);
-                        field.set(object,value);
+                        field.set(valueobject,value);
                         if(type==Integer.TYPE)
                         {
                             System.out.println("integer");
@@ -60,11 +95,16 @@ public class objectSerializer
                     else if(ptr==2)
                     {
                         System.out.println("not basic type");
-                      //  objectSerializer.readObject(input);
-                        Class subcls=input.readClass();
-                        System.out.println("class="+subcls.getName());
-                        String fieldname=input.readFieldName();
-                        System.out.println("name="+fieldname);
+                        //  objectSerializer.readObject(input);
+                       // Class subcls=input.readClass();
+                       // System.out.println("class="+subcls.getName());
+
+                      //  String fieldname=input.readFieldName();
+                      //  System.out.println("name="+fieldname);
+                     //   int fieldlength=input.readInt();
+                     //   System.out.println("fieldlength="+fieldlength);
+                      //  Class subcls=cls.getDeclaredField(fieldname).getType();
+/*
                         Object subobj=subcls.newInstance();
                         input.isBasicType();
                         Type type=input.readBasicType();
@@ -77,17 +117,37 @@ public class objectSerializer
                         Field field1=cls.getDeclaredField(fieldname);
                         field1.setAccessible(true);
                         field1.set(object, subobj);
+*/
+                        Object fieldObject=readObjectFields(cls,input,false, valueobject);
                     }
-                    ptr=input.isBasicType();
                 }
-                return object;
+                if(dector==false)
+                {
+                    System.out.println("Parntfield+"+Parntfield.getName());
+                    Parntfield.setAccessible(true);
+                    Parntfield.set(srcObject,valueobject);
+                }
+                return valueobject;
             }
-            catch (Exception e)
+            catch (IllegalAccessException e)
             {
                 e.printStackTrace();
             }
+            catch (NoSuchFieldException e)
+            {
+                e.printStackTrace();
+            }
+        catch (InstantiationException e)
+        {
+            e.printStackTrace();
         }
         return null;
+    }
+    //根据字节数组和反射生成字object信息
+    public static Object readObject(Input input)
+    {
+        Class cls=readObjectClass(input);
+        return readObjectFields(cls,input,true,null);
     }
     public static void writeObjectClass(Output output,String name,Object SrcObject)
     {
@@ -105,7 +165,12 @@ public class objectSerializer
        // classSerializer.writeClass(output, cls);
        // classSerializer.writeObjectName(output, name);
         Field[] fields=cls.getDeclaredFields();
-        intSerializer.writeInt(output,name,fields.length);
+       // StringSerializer.writeString(output,);
+        System.out.println("=========="+name+"  "+fields.length);
+        output.writeObjectType();
+        output.writeString(name);
+        output.writeInt(fields.length);
+       // intSerializer.writeInt(output,name,fields.length);
         for(int i=0;i<fields.length;i++)
         {
             System.out.println("field="+fields[i].getName());
@@ -116,7 +181,6 @@ public class objectSerializer
                 //处理类型是基本类型
                 if(index!=-1)
                 {
-
                     fields[i].setAccessible(true);
                     if(type==Integer.TYPE)
                     {
@@ -149,7 +213,7 @@ public class objectSerializer
                 {
                     System.out.println("other class=" + type);
                     fields[i].setAccessible(true);
-                  //  objectSerializer.writeObject(output,fields[i].getName(),fields[i].get(object));
+                    objectSerializer.writeObject(output,fields[i].getName(),fields[i].get(SrcObject));
                 }
             }
             catch (Exception e)
