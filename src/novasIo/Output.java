@@ -38,9 +38,24 @@ public class Output
             buffer[position++]=(byte)BasicType.isBasicType(type);
        // }
     }
+    public void writeObjectType()
+    {
+        buffer[position++]=2;
+    }
+    //这个函数用来写入变量的名称，长度不超过127
     public void writeString(String m)
     {
         writeByte(m.length());
+        byte[] chars=m.getBytes();
+        for(int i=0;i<chars.length;i++)
+        {
+            buffer[position++]=chars[i];
+        }
+    }
+    //这个函数写入sring的值
+    public void writeValueString(String m)
+    {
+        writeInt(m.length());
         byte[] chars=m.getBytes();
         for(int i=0;i<chars.length;i++)
         {
@@ -77,7 +92,7 @@ public class Output
     }
     public void writeObject(Object object)
     {
-        objectSerializer.writeObject(this, object);
+        objectSerializer.writeObject(this,"", object);
         try {
             fileOutputStream.write(buffer,0,position);
             fileOutputStream.close();

@@ -35,6 +35,10 @@ public class Input
         }
         return new String(strsbytes);
     }
+    public String readObjectName()
+    {
+        return readFieldName();
+    }
     public int isBasicType()
     {
        return buffer[position++];
@@ -61,6 +65,16 @@ public class Input
         }
         return cls;
     }
+    public String readValueString()
+    {
+        int length=readInt();
+        byte[] bytes=new byte[length];
+        for(int i=0;i<length;i++)
+        {
+            bytes[i]=buffer[position++];
+        }
+        return new String(bytes);
+    }
     public Object readValue(Type type)
     {
        if(type==Integer.TYPE)
@@ -71,7 +85,10 @@ public class Input
        {
            return readDouble();
        }
-
+       else if(type==String.class)
+       {
+           return readValueString();
+       }
         return readInt();
     }
     public double readDouble()
@@ -82,11 +99,11 @@ public class Input
     public long readLong()
     {
         long s = 0;
-        long s0 = (buffer[position++] & 0xff);// 最低位
+        long s0 = (buffer[position++] & 0xff);// �?低位
         long s1 = (buffer[position++] & 0xff);
         long s2 = (buffer[position++] & 0xff);
         long s3 = (buffer[position++] & 0xff);
-        long s4 = (buffer[position++] & 0xff);// 最低位
+        long s4 = (buffer[position++] & 0xff);// �?低位
         long s5 = (buffer[position++] & 0xff);
         long s6 = (buffer[position++] & 0xff);
         long s7 = (buffer[position++] & 0xff);

@@ -1,5 +1,7 @@
 package novasIo;
 
+import type.IntArray;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -14,6 +16,8 @@ public class BasicType {
         arrayList.add(Boolean.TYPE);
         arrayList.add(Double.TYPE);
         arrayList.add(String.class);
+        int[] c=new int[1];
+        arrayList.add(c.getClass());
     }
     public static Type getBasicType(int index)
     {
@@ -21,6 +25,8 @@ public class BasicType {
     }
     public static int isBasicType(Type type)
     {
-        return arrayList.indexOf(type);
+        int index=arrayList.indexOf(type);
+        // arrayList.indexOf(type);
+        return index;
     }
 }

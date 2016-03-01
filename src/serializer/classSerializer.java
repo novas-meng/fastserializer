@@ -14,7 +14,12 @@ public class classSerializer
     }
     public static void writeClass(Output output,Class cls)
     {
+        output.writeObjectType();
         String clsname=cls.getName();
         output.writeString(clsname);
+    }
+    public static void writeObjectName(Output output,String name)
+    {
+        output.writeString(name);
     }
 }

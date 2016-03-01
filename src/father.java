@@ -7,7 +7,15 @@ public class father
 {
     int a=8;
     double c=56.98;
+    child child;
     String demo="my name is novas";
+    student st=new student();
+    int[] array=new int[100];
+    public void change()
+    {
+        array[0]=9;
+        st.c=9066;
+    }
     //ArrayList<String> arrayList=new ArrayList<>();
  //   student student=new student();
     /*
