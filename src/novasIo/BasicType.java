@@ -4,6 +4,8 @@ import type.IntArray;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by novas on 16/2/28.
@@ -16,8 +18,8 @@ public class BasicType {
         arrayList.add(Boolean.TYPE);
         arrayList.add(Double.TYPE);
         arrayList.add(String.class);
-        int[] c=new int[1];
-        arrayList.add(c.getClass());
+        arrayList.add(IntArray.getType());
+        arrayList.add(HashMap.class);
     }
     public static Type getBasicType(int index)
     {
@@ -26,6 +28,7 @@ public class BasicType {
     public static int isBasicType(Type type)
     {
         int index=arrayList.indexOf(type);
+        System.out.println("isbasictype="+type.getTypeName());
         // arrayList.indexOf(type);
         return index;
     }

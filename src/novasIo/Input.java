@@ -1,6 +1,7 @@
 package novasIo;
 
 import serializer.objectSerializer;
+import type.IntArray;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Type;
@@ -89,7 +90,23 @@ public class Input
        {
            return readValueString();
        }
+       else if(type== IntArray.getType())
+       {
+           return readIntArray();
+       }
         return readInt();
+    }
+    public int[] readIntArray()
+    {
+        int length=readInt();
+        System.out.println("array length="+length);
+        int[] array=new int[length];
+        for(int i=0;i<length;i++)
+        {
+            array[i]=readInt();
+            System.out.println(array[i]);
+        }
+        return array;
     }
     public double readDouble()
     {

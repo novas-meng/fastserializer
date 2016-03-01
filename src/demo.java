@@ -6,6 +6,9 @@ import novasIo.novas;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by novas on 16/2/28.
@@ -37,19 +40,22 @@ public class demo {
 
         long m=Double.doubleToLongBits(100.7895456 );
         System.out.println( Double.longBitsToDouble(m));
+
         father father=new father();
         father.a=89;
         father.c=98888.7;
+        father.array[0]=8;
         father.change();
         novas novas=new novas();
+
         Output output=new Output("file.bin");
         output.writeObject(father);
         Input input=new Input("file.bin");
         father=(father)input.readObject();
         System.out.println(father.a);
         System.out.println(father.demo);
-        System.out.println(father.st.c);
-
+        System.out.println(father.c);
+        System.out.println(father.array[0]);
         //father f=new father();
        // Field[] fields=f.getClass().getDeclaredFields();
        // for(int i=0;i<fields.length;i++)

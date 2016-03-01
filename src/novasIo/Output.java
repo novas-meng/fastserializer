@@ -90,9 +90,13 @@ public class Output
         buffer[position++]=(byte)((m>>16)&255);
         buffer[position++]=(byte)((m>>24)&255);
     }
+    public void writeArrayLength(int length)
+    {
+        this.writeInt(length);
+    }
     public void writeObject(Object object)
     {
-        objectSerializer.writeObject(this,"", object);
+        objectSerializer.writeObjectClass(this,"src", object);
         try {
             fileOutputStream.write(buffer,0,position);
             fileOutputStream.close();
