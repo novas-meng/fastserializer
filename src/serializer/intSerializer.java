@@ -18,4 +18,9 @@ public class intSerializer
         output.writeString(name);
         output.writeInt(value);
     }
+    public static void writeInt(Output output,int value)
+    {
+        output.writeBasicFlag(Integer.TYPE);
+        output.writeInt(value);
+    }
 }

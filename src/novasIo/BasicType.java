@@ -28,8 +28,6 @@ public class BasicType {
     public static int isBasicType(Type type)
     {
         int index=arrayList.indexOf(type);
-        System.out.println("isbasictype="+type.getTypeName());
-        // arrayList.indexOf(type);
         return index;
     }
 }

@@ -1,10 +1,13 @@
 package novasIo;
 
 import serializer.objectSerializer;
+import sun.jvm.hotspot.code.ObjectValue;
 import type.IntArray;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by novas on 16/2/28.
@@ -29,13 +32,13 @@ public class Input
     public String readFieldName()
     {
         int length=buffer[position++];
-        System.out.println("length="+length);
+       // System.out.println("length="+length);
         byte[] strsbytes=new byte[length];
         for(int i=0;i<length;i++)
         {
             strsbytes[i]=buffer[position++];
         }
-        System.out.println(strsbytes[0]);
+      //  System.out.println(strsbytes[0]);
         return new String(strsbytes);
     }
     public String readObjectName()
@@ -59,7 +62,7 @@ public class Input
         Class cls=null;
         try
         {
-            System.out.println(new String(temp));
+          //  System.out.println(new String(temp));
             cls=Class.forName(new String(temp));
         }
         catch (Exception e)
@@ -96,12 +99,59 @@ public class Input
        {
            return readIntArray();
        }
+       else if(type== HashMap.class)
+       {
+           return readMap();
+       }
         return readInt();
+    }
+    public Map readMap()
+    {
+        int mapsize=readInt();
+        Map map=new HashMap();
+      //  System.out.println("mapsize="+mapsize);
+        Object key=null;
+        Object value=null;
+        for(int i=0;i<mapsize;i++)
+        {
+
+            int keyPtr=isBasicType();
+            if(keyPtr==1)
+            {
+              //  System.out.println("是基本类型");
+                Type type=readBasicType();
+                if(type==String.class)
+                {
+                  //  System.out.println("keys");
+                    key=readFieldName();
+                  //  System.out.println("key="+key.toString());
+                }
+            }
+            int valuePtr=isBasicType();
+            if(valuePtr==1)
+            {
+              //  System.out.println("是基本类型");
+                Type type=readBasicType();
+                if(type==IntArray.getType())
+                {
+                   // System.out.println("values");
+                    value=readIntArray();
+                    int[] array=(int[])value;
+                 //   for(int j=0;j<array.length;j++)
+                 //   {
+                      //  System.out.println(array[j]);
+                   // }
+                 //   System.out.println("key="+value.toString());
+                }
+            }
+            map.put(key,value);
+        }
+        return map;
     }
     public int[] readIntArray()
     {
         int length=readInt();
-        System.out.println("array length="+length);
+    //    System.out.println("array length="+length);
         int[] array=new int[length];
         for(int i=0;i<length;i++)
         {
@@ -118,11 +168,11 @@ public class Input
     public long readLong()
     {
         long s = 0;
-        long s0 = (buffer[position++] & 0xff);// �?低位
+        long s0 = (buffer[position++] & 0xff);// �?低位
         long s1 = (buffer[position++] & 0xff);
         long s2 = (buffer[position++] & 0xff);
         long s3 = (buffer[position++] & 0xff);
-        long s4 = (buffer[position++] & 0xff);// �?低位
+        long s4 = (buffer[position++] & 0xff);// �?低位
         long s5 = (buffer[position++] & 0xff);
         long s6 = (buffer[position++] & 0xff);
         long s7 = (buffer[position++] & 0xff);
@@ -140,7 +190,9 @@ public class Input
     }
     public int readInt()
     {
-        return (buffer[position++]&255)+((buffer[position++]&255)<<8)+((buffer[position++]&255)<<16)+((buffer[position++]&255)<<24);
+      //  return (buffer[position++]&255)+((buffer[position++]&255)<<8)+((buffer[position++]&255)<<16)+((buffer[position++]&255)<<24);
+        return (buffer[position++]&255)+((buffer[position++]&255)<<8);
+
     }
     public Object readObject()
     {
@@ -152,7 +204,7 @@ public class Input
         {
             e.printStackTrace();
         }
-        System.out.println(buffer[0]);
+      //  System.out.println(buffer[0]);
         Object object= objectSerializer.readObject(this);
         return object;
     }

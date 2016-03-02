@@ -42,7 +42,7 @@ public class Output
     {
         buffer[position++]=2;
     }
-    //Õâ¸öº¯ÊýÓÃÀ´Ð´Èë±äÁ¿µÄÃû³Æ£¬³¤¶È²»³¬¹ý127
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½È²ï¿½ï¿½ï¿½ï¿½ï¿½127
     public void writeString(String m)
     {
         writeByte(m.length());
@@ -52,7 +52,7 @@ public class Output
             buffer[position++]=chars[i];
         }
     }
-    //Õâ¸öº¯ÊýÐ´ÈësringµÄÖµ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½sringï¿½ï¿½Öµ
     public void writeValueString(String m)
     {
         writeInt(m.length());
@@ -87,8 +87,8 @@ public class Output
     {
         buffer[position++]=(byte)(m&255);
         buffer[position++]=(byte)((m>>8)&255);
-        buffer[position++]=(byte)((m>>16)&255);
-        buffer[position++]=(byte)((m>>24)&255);
+      //  buffer[position++]=(byte)((m>>16)&255);
+       // buffer[position++]=(byte)((m>>24)&255);
     }
     public void writeArrayLength(int length)
     {
@@ -96,6 +96,7 @@ public class Output
     }
     public void writeObject(Object object)
     {
+        long m=System.currentTimeMillis();
         objectSerializer.writeObjectClass(this,"src", object);
         try {
             fileOutputStream.write(buffer,0,position);
@@ -105,5 +106,7 @@ public class Output
         {
             e.printStackTrace();
         }
+        long n=System.currentTimeMillis();
+        System.out.println("write time="+(n-m));
     }
 }

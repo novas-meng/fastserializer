@@ -19,4 +19,14 @@ public class intArraySerializer
             output.writeInt(array[i]);
         }
     }
+    public static void writeIntArray(Output output,Object value)
+    {
+        output.writeBasicFlag(IntArray.getType());
+        int[] array=(int[])value;
+        output.writeArrayLength(array.length);
+        for(int i=0;i<array.length;i++)
+        {
+            output.writeInt(array[i]);
+        }
+    }
 }

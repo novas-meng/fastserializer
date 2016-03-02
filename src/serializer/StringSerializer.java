@@ -13,4 +13,9 @@ public class StringSerializer
         output.writeString(name);
         output.writeValueString(value.toString());
     }
+    public static void writeString(Output output,Object value)
+    {
+        output.writeBasicFlag(String.class);
+        output.writeString(value.toString());
+    }
 }

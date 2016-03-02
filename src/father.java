@@ -1,22 +1,28 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by novas on 16/2/28.
  */
-public class father
+public class father implements Serializable
 {
-   // HashMap<String,int[]> map=new HashMap<>();
+    HashMap<String,int[]> map=new HashMap<>();
     public void change()
     {
-       // int[] array=new int[10];
-        for(int i=0;i<array.length;i++)
+
+        for(int i=0;i<intarray.length;i++)
         {
-            array[i]=i;
+            intarray[i]=i;
         }
-        for(int i=0;i<array.length;i++)
+        for(int i=0;i<200;i++)
         {
-          // map.put(i+"",array);
+            int[] maparray=new int[1000];
+            for(int j=0;j<maparray.length;j++)
+            {
+                maparray[j]=j;
+            }
+           map.put(i+"",maparray);
         }
         st.c=9056;
     }
@@ -27,7 +33,7 @@ public class father
    // child child;
     String demo="my name is novas";
     student st=new student();
-    int[] array=new int[10000];
+    int[] intarray=new int[1000];
     /*
     public void change()
     {

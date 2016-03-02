@@ -73,28 +73,30 @@ public class objectSerializer
                         Type type=input.readBasicType();
                         String m=input.readFieldName();
                         Object value=input.readValue(type);
-                        System.out.println("basic name=" + m);
+                      //  System.out.println("basic name=" + m);
                         Field field=cls.getDeclaredField(m);
                         field.setAccessible(true);
                         field.set(valueobject,value);
                         if(type==Integer.TYPE)
                         {
-                            System.out.println("integer");
+                           // System.out.println("integer");
                         }
                         if(type==Double.TYPE)
                         {
-                            System.out.println("Double");
+                           // System.out.println("Double");
                         }
                         if(type==IntArray.getType())
                         {
-                            System.out.println("fafsasf==============");
-
-                            System.out.println("IntArray");
+                           // System.out.println("IntArray");
+                        }
+                        if(type==HashMap.class)
+                        {
+                           // System.out.println("hashmap");
                         }
                     }
                     else if(ptr==2)
                     {
-                        System.out.println("not basic type");
+                     //   System.out.println("not basic type");
                         //  objectSerializer.readObject(input);
                        // Class subcls=input.readClass();
                        // System.out.println("class="+subcls.getName());
@@ -123,7 +125,7 @@ public class objectSerializer
                 }
                 if(dector==false)
                 {
-                    System.out.println("Parntfield+"+Parntfield.getName());
+                  //  System.out.println("Parntfield+"+Parntfield.getName());
                     Parntfield.setAccessible(true);
                     Parntfield.set(srcObject,valueobject);
                 }
@@ -152,28 +154,31 @@ public class objectSerializer
     public static void writeObjectClass(Output output,String name,Object SrcObject)
     {
         Class cls=SrcObject.getClass();
-        System.out.println("current "+cls.getName());
+     //   System.out.println("current "+cls.getName());
         classSerializer.writeClass(output, cls);
         writeObject(output,name,SrcObject);
     }
     //根据反射进行写入object信息,必须先写名字，和包含的字段的个数
-    public static void writeObject(Output output,String name,Object SrcObject)
+    public static void writeObject(Output output,String name,Object srcObject)
     {
-        Class cls=SrcObject.getClass();
-       // classSerializer.writeObjectName(output, name);
+        long time=System.currentTimeMillis();
+        Class cls=srcObject.getClass();
+        long time1=System.currentTimeMillis();
+        // classSerializer.writeObjectName(output, name);
        // System.out.println("current "+cls.getName());
        // classSerializer.writeClass(output, cls);
        // classSerializer.writeObjectName(output, name);
         Field[] fields=cls.getDeclaredFields();
-       // StringSerializer.writeString(output,);
-        System.out.println("=========="+name+"  "+fields.length);
+        // StringSerializer.writeString(output,);
+      //  System.out.println("=========="+name+"  "+fields.length);
         output.writeObjectType();
         output.writeString(name);
         output.writeInt(fields.length);
-       // intSerializer.writeInt(output,name,fields.length);
+        System.out.println("time=" + (time1 - time));
+        // intSerializer.writeInt(output,name,fields.length);
         for(int i=0;i<fields.length;i++)
         {
-            System.out.println("field="+fields[i].getName());
+         //   System.out.println("field="+fields[i].getName());
             Type type=fields[i].getType();
             int index= BasicType.isBasicType(type);
             try
@@ -184,36 +189,36 @@ public class objectSerializer
                     fields[i].setAccessible(true);
                     if(type==Integer.TYPE)
                     {
-                        System.out.println(fields[i].getName());
+                      //  System.out.println(fields[i].getName());
 //                        System.out.println(fields[i].getInt(object));
-                        intSerializer.writeInt(output,fields[i].getName(),fields[i].getInt(SrcObject));
+                        intSerializer.writeInt(output,fields[i].getName(),fields[i].getInt(srcObject));
                     }
                     else if(type==Double.TYPE)
                     {
                         // fields[i].setAccessible(true);
-                        doubleSerializer.writeDouble(output, fields[i].getName(), fields[i].getDouble(SrcObject));
+                        doubleSerializer.writeDouble(output, fields[i].getName(), fields[i].getDouble(srcObject));
                     }
                     else if(type==String.class)
                     {
-                        StringSerializer.writeString(output,fields[i].getName(),fields[i].get(SrcObject));
+                        StringSerializer.writeString(output,fields[i].getName(),fields[i].get(srcObject));
                     }
                     else if(type== IntArray.getType())
                     {
-                        intArraySerializer.writeIntArray(output,fields[i].getName(),fields[i].get(SrcObject));
+                        intArraySerializer.writeIntArray(output,fields[i].getName(),fields[i].get(srcObject));
                         // objectSerializer.writeObject(output,fields[i].getName(),fields[i].get(object));
                     }
                     else if(type== HashMap.class)
                     {
-                        System.out.println("this is a map");
-                       // mapSerializer.writeMap(output,fields[i].getName(),fields[i].get(object));
+                       // System.out.println("this is a map");
+                        mapSerializer.writeMap(output, fields[i].getName(), fields[i].get(srcObject));
                     }
                 }
                 //处理类型是object
                 else
                 {
-                    System.out.println("other class=" + type);
+                  //  System.out.println("other class=" + type);
                     fields[i].setAccessible(true);
-                    objectSerializer.writeObject(output,fields[i].getName(),fields[i].get(SrcObject));
+                    objectSerializer.writeObject(output,fields[i].getName(),fields[i].get(srcObject));
                 }
             }
             catch (Exception e)
