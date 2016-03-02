@@ -108,11 +108,51 @@ public class Output
     }
     public void writeInt(int m)
     {
-        require(2);
-        buffer[position++]=(byte)(m&255);
-        buffer[position++]=(byte)((m>>8)&255);
-      //  buffer[position++]=(byte)((m>>16)&255);
-       // buffer[position++]=(byte)((m>>24)&255);
+/*
+        if(m>>8==0)
+        {
+              require(2);
+              buffer[position++]=1;
+              buffer[position++]=(byte)(m&255);
+              //buffer[position++]=(byte)((m>>8)&255);
+            //  buffer[position++]=(byte)((m>>16)&255);
+            // buffer[position++]=(byte)((m>>24)&255);
+        }
+        else if(m>>16==0)
+        {
+            require(3);
+            buffer[position++]=2;
+            buffer[position++]=(byte)(m&255);
+            buffer[position++]=(byte)((m>>8)&255);
+            //  buffer[position++]=(byte)((m>>16)&255);
+            // buffer[position++]=(byte)((m>>24)&255);
+        }
+        else if(m>>24==0)
+        {
+            require(4);
+            buffer[position++]=3;
+            buffer[position++]=(byte)(m&255);
+            buffer[position++]=(byte)((m>>8)&255);
+            buffer[position++]=(byte)((m>>16)&255);
+            // buffer[position++]=(byte)((m>>24)&255);
+        }
+        else
+        {
+            require(5);
+            buffer[position++]=4;
+            buffer[position++]=(byte)(m&255);
+            buffer[position++]=(byte)((m>>8)&255);
+            buffer[position++]=(byte)((m>>16)&255);
+            buffer[position++]=(byte)((m>>24)&255);
+        }
+        */
+
+        require(4);
+        buffer[position++]=(byte)(m&0xff);
+        buffer[position++]=(byte)((m>>8)&0xff);
+        buffer[position++]=(byte)((m>>16)&0xff);
+        buffer[position++]=(byte)((m>>24)&0xff);
+
     }
     public void writeArrayLength(int length)
     {

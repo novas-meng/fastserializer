@@ -219,12 +219,27 @@ public class Input
         return s;
 
     }
-    public int readInt()
-    {
-        require(2);
-      //  return (buffer[position++]&255)+((buffer[position++]&255)<<8)+((buffer[position++]&255)<<16)+((buffer[position++]&255)<<24);
-        return (buffer[position++]&255)+((buffer[position++]&255)<<8);
-
+    public int readInt() {
+         require(4);
+         return (buffer[position++]&255)+((buffer[position++]&255)<<8)+((buffer[position++]&255)<<16)+((buffer[position++]&255)<<24);
+        // return (buffer[position++]&255)+((buffer[position++]&255)<<8);
+/*
+        require(1);
+        int length = buffer[position++];
+        if (length == 1) {
+            require(1);
+            return (buffer[position++] & 255);
+        } else if (length == 2) {
+            require(2);
+            return (buffer[position++] & 255) + ((buffer[position++] & 255) << 8);
+        } else if (length == 3) {
+            require(3);
+            return (buffer[position++] & 255) + ((buffer[position++] & 255) << 8) + ((buffer[position++] & 255) << 16);
+        } else {
+            require(4);
+            return (buffer[position++] & 255) + ((buffer[position++] & 255) << 8) + ((buffer[position++] & 255) << 16) + ((buffer[position++] & 255) << 24);
+        }
+*/
     }
     public Object readObject()
     {

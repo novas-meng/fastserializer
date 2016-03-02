@@ -62,8 +62,9 @@ public class demo {
         System.out.println("novas serializer time="+(time1-time));
 
 
+      //
       //  ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream("father.bin"));
-      //  oos.writeObject(father);
+       // oos.writeObject(father);
       //  oos.close();
       //  ObjectInputStream ois=new ObjectInputStream(new FileInputStream("father.bin"));
       //  father=(father)ois.readObject();
@@ -78,7 +79,7 @@ public class demo {
         System.out.println(father.map.get("7")[8]);
         System.out.println("time="+(time2-time1));
 
-/*
+
         long time3 = System.currentTimeMillis();
         Kryo kryo = new Kryo();
         com.esotericsoftware.kryo.io.Output outputa = new com.esotericsoftware.kryo.io.Output(new FileOutputStream("filea.bin"));
@@ -90,7 +91,7 @@ public class demo {
         long time4 = System.currentTimeMillis();
         System.out.println("time:" + (time4-time3));
         System.out.println(student.map.get("9")[100]);
-        */
+
       //  int[] array=new int[2];
       //  array[0]=0;
       //  array[1]=1;
