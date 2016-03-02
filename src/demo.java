@@ -72,6 +72,7 @@ public class demo {
         System.out.println(father.c);
         System.out.println(father.intarray[4]);
         System.out.println(father.st.c);
+
       //  System.out.println(father.map.get("7")[8]);
         System.out.println("time="+(time2-time1));
       //  int[] array=new int[2];
