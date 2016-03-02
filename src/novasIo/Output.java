@@ -3,6 +3,7 @@ package novasIo;
 import serializer.objectSerializer;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -10,13 +11,29 @@ import java.lang.reflect.Type;
  */
 public class Output
 {
-    int capcity=409600;
+    int capcity=40960;
     byte[] buffer=new byte[capcity];
     int position=0;
     FileOutputStream fileOutputStream;
     public Output(String path)
     {
-        this(path, 409600);
+        this(path, 40960);
+    }
+    public void require(int bytecount)
+    {
+        if(position+bytecount>=capcity)
+        {
+            try
+            {
+                fileOutputStream.write(buffer,0,position);
+                position=0;
+                buffer=new byte[capcity];
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
     public Output(String path,int capcity)
     {
@@ -32,6 +49,7 @@ public class Output
     }
     public void writeBasicFlag(Type type)
     {
+        require(2);
         buffer[position++]=1;
        // if(type==Integer.TYPE)
        // {
@@ -40,23 +58,26 @@ public class Output
     }
     public void writeObjectType()
     {
+        require(1);
         buffer[position++]=2;
     }
-    //�����������д���������ƣ����Ȳ�����127
+    //write the field name ,the max length is 127
     public void writeString(String m)
     {
-        writeByte(m.length());
         byte[] chars=m.getBytes();
+        require(1+chars.length);
+        writeByte(m.length());
         for(int i=0;i<chars.length;i++)
         {
             buffer[position++]=chars[i];
         }
     }
-    //�������д��sring��ֵ
+    //write the string ,but the length may be above 127,so choose int;
     public void writeValueString(String m)
     {
-        writeInt(m.length());
         byte[] chars=m.getBytes();
+        require(1+chars.length);
+        writeInt(m.length());
         for(int i=0;i<chars.length;i++)
         {
             buffer[position++]=chars[i];
@@ -64,6 +85,7 @@ public class Output
     }
     public void writeByte(int length)
     {
+        require(1);
         buffer[position++]=(byte)length;
     }
     public void writeDouble(double m)
@@ -73,6 +95,7 @@ public class Output
     }
     public void writeLong(long m)
     {
+        require(8);
         buffer[position++]=(byte)(m&255);
         buffer[position++]=(byte)((m>>8)&255);
         buffer[position++]=(byte)((m>>16)&255);
@@ -85,6 +108,7 @@ public class Output
     }
     public void writeInt(int m)
     {
+        require(2);
         buffer[position++]=(byte)(m&255);
         buffer[position++]=(byte)((m>>8)&255);
       //  buffer[position++]=(byte)((m>>16)&255);
@@ -92,11 +116,12 @@ public class Output
     }
     public void writeArrayLength(int length)
     {
+        require(4);
         this.writeInt(length);
     }
     public void writeObject(Object object)
     {
-        long m=System.currentTimeMillis();
+       // long m=System.currentTimeMillis();
         objectSerializer.writeObjectClass(this,"src", object);
         try {
             fileOutputStream.write(buffer,0,position);
@@ -106,7 +131,7 @@ public class Output
         {
             e.printStackTrace();
         }
-        long n=System.currentTimeMillis();
-        System.out.println("write time="+(n-m));
+      //  long n=System.currentTimeMillis();
+     //   System.out.println("write time="+(n-m));
     }
 }

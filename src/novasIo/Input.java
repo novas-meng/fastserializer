@@ -1,10 +1,10 @@
 package novasIo;
 
 import serializer.objectSerializer;
-import sun.jvm.hotspot.code.ObjectValue;
 import type.IntArray;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Input
 {
-    int capcity=409600;
+    int capcity=4096;
     byte[] buffer=new byte[capcity];
     int position=0;
     FileInputStream fileInputStream;
@@ -29,9 +29,34 @@ public class Input
             e.printStackTrace();
         }
     }
+    //allocate byte buffer dynamic.according to the bytelength;
+    public void require(int bytelength)
+    {
+        if(position+bytelength>=capcity)
+        {
+            try
+            {
+                byte[] temp=new byte[capcity];
+                int length=capcity-position;
+                System.arraycopy(buffer,position,temp,0,length);
+                fileInputStream.read(temp,length,temp.length-length);
+                buffer=temp;
+                position=0;
+            }
+            catch (Exception e)
+            {
+                System.out.println(position);
+                System.out.println(bytelength);
+              //  System.out.println(b)
+                e.printStackTrace();
+            }
+        }
+    }
     public String readFieldName()
     {
+        require(1);
         int length=buffer[position++];
+        require(length);
        // System.out.println("length="+length);
         byte[] strsbytes=new byte[length];
         for(int i=0;i<length;i++)
@@ -47,15 +72,19 @@ public class Input
     }
     public int isBasicType()
     {
+        require(1);
        return buffer[position++];
     }
     public Type readBasicType()
     {
+        require(1);
         return BasicType.getBasicType(buffer[position++]);
     }
     public Class readClass()
     {
+        require(1);
         int length=buffer[position++];
+        require(length);
         byte[] temp=new byte[length];
         System.arraycopy(buffer,position,temp,0,temp.length);
         position=position+temp.length;
@@ -74,6 +103,7 @@ public class Input
     public String readValueString()
     {
         int length=readInt();
+        require(length);
         byte[] bytes=new byte[length];
         for(int i=0;i<length;i++)
         {
@@ -118,7 +148,7 @@ public class Input
             int keyPtr=isBasicType();
             if(keyPtr==1)
             {
-              //  System.out.println("是基本类型");
+              //  System.out.println("是基本类�?");
                 Type type=readBasicType();
                 if(type==String.class)
                 {
@@ -130,7 +160,7 @@ public class Input
             int valuePtr=isBasicType();
             if(valuePtr==1)
             {
-              //  System.out.println("是基本类型");
+              //  System.out.println("是基本类�?");
                 Type type=readBasicType();
                 if(type==IntArray.getType())
                 {
@@ -167,12 +197,13 @@ public class Input
     }
     public long readLong()
     {
+        require(8);
         long s = 0;
-        long s0 = (buffer[position++] & 0xff);// �?低位
+        long s0 = (buffer[position++] & 0xff);// �??低位
         long s1 = (buffer[position++] & 0xff);
         long s2 = (buffer[position++] & 0xff);
         long s3 = (buffer[position++] & 0xff);
-        long s4 = (buffer[position++] & 0xff);// �?低位
+        long s4 = (buffer[position++] & 0xff);// �??低位
         long s5 = (buffer[position++] & 0xff);
         long s6 = (buffer[position++] & 0xff);
         long s7 = (buffer[position++] & 0xff);
@@ -190,6 +221,7 @@ public class Input
     }
     public int readInt()
     {
+        require(2);
       //  return (buffer[position++]&255)+((buffer[position++]&255)<<8)+((buffer[position++]&255)<<16)+((buffer[position++]&255)<<24);
         return (buffer[position++]&255)+((buffer[position++]&255)<<8);
 

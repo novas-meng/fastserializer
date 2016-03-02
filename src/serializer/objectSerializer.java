@@ -161,9 +161,9 @@ public class objectSerializer
     //根据反射进行写入object信息,必须先写名字，和包含的字段的个数
     public static void writeObject(Output output,String name,Object srcObject)
     {
-        long time=System.currentTimeMillis();
+      //  long time=System.currentTimeMillis();
         Class cls=srcObject.getClass();
-        long time1=System.currentTimeMillis();
+       // long time1=System.currentTimeMillis();
         // classSerializer.writeObjectName(output, name);
        // System.out.println("current "+cls.getName());
        // classSerializer.writeClass(output, cls);
@@ -174,7 +174,7 @@ public class objectSerializer
         output.writeObjectType();
         output.writeString(name);
         output.writeInt(fields.length);
-        System.out.println("time=" + (time1 - time));
+     //   System.out.println("time=" + (time1 - time));
         // intSerializer.writeInt(output,name,fields.length);
         for(int i=0;i<fields.length;i++)
         {

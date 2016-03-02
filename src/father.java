@@ -15,12 +15,12 @@ public class father implements Serializable
         {
             intarray[i]=i;
         }
-        for(int i=0;i<200;i++)
+        for(int i=0;i<10000;i++)
         {
-            int[] maparray=new int[1000];
+            int[] maparray=new int[10000];
             for(int j=0;j<maparray.length;j++)
             {
-                maparray[j]=j;
+                maparray[j]=j*i;
             }
            map.put(i+"",maparray);
         }

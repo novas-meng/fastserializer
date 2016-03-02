@@ -1,4 +1,5 @@
 
+import com.esotericsoftware.kryo.Kryo;
 import novasIo.Input;
 import novasIo.Output;
 import novasIo.novas;
@@ -41,7 +42,7 @@ public class demo {
         */
 
         long m=Double.doubleToLongBits(100.7895456);
-        System.out.println( Double.longBitsToDouble(m));
+      //  System.out.println( Double.longBitsToDouble(m));
         father father=new father();
         father.a=89;
         father.c=98888.7;
@@ -51,20 +52,21 @@ public class demo {
         long time=System.currentTimeMillis();
 
         novas novas=new novas();
-       Output output=new Output("file.bin");
+        Output output=new Output("file.bin");
         output.writeObject(father);
         Input input=new Input("file.bin");
         father=(father)input.readObject();
+
         long time1=System.currentTimeMillis();
 
-        System.out.println("time="+(time1-time));
+        System.out.println("novas serializer time="+(time1-time));
 
 
-        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream("father.bin"));
-        oos.writeObject(father);
-        oos.close();
-        ObjectInputStream ois=new ObjectInputStream(new FileInputStream("father.bin"));
-        father=(father)ois.readObject();
+      //  ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream("father.bin"));
+      //  oos.writeObject(father);
+      //  oos.close();
+      //  ObjectInputStream ois=new ObjectInputStream(new FileInputStream("father.bin"));
+      //  father=(father)ois.readObject();
 
         long time2=System.currentTimeMillis();
         System.out.println(father.a);
@@ -73,8 +75,22 @@ public class demo {
         System.out.println(father.intarray[4]);
         System.out.println(father.st.c);
 
-      //  System.out.println(father.map.get("7")[8]);
+        System.out.println(father.map.get("7")[8]);
         System.out.println("time="+(time2-time1));
+
+/*
+        long time3 = System.currentTimeMillis();
+        Kryo kryo = new Kryo();
+        com.esotericsoftware.kryo.io.Output outputa = new com.esotericsoftware.kryo.io.Output(new FileOutputStream("filea.bin"));
+            kryo.writeObject(outputa, father);
+           outputa.close();
+        com.esotericsoftware.kryo.io.Input inputa = new com.esotericsoftware.kryo.io.Input(new FileInputStream("filea.bin"));
+        father student = kryo.readObject(inputa, father.class);
+        inputa.close();
+        long time4 = System.currentTimeMillis();
+        System.out.println("time:" + (time4-time3));
+        System.out.println(student.map.get("9")[100]);
+        */
       //  int[] array=new int[2];
       //  array[0]=0;
       //  array[1]=1;
